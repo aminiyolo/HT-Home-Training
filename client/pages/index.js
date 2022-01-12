@@ -1,8 +1,8 @@
 import Head from "next/head";
 import Image from "next/image";
-import { makePublicRouterInstance, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useState } from "react";
-import Routine from "../components/Routine.jsx";
+import Routine from "../components/Routine/Routine";
 import StopWatch from "../components/StopWatch/StopWatch.jsx";
 
 export default function Home({ posts }) {
@@ -74,16 +74,16 @@ export default function Home({ posts }) {
 //   };
 // };
 
-export const getStaticProps = async () => {
-  const res = await fetch(
-    "https://jsonplaceholder.typicode.com/posts?_start=0&_end=10",
-  );
-  const posts = await res.json();
+// export const getStaticProps = async () => {
+//   const res = await fetch(
+//     "https://jsonplaceholder.typicode.com/posts?_start=0&_end=10",
+//   );
+//   const posts = await res.json();
 
-  return {
-    props: {
-      posts,
-    },
-    revalidate: 20,
-  };
-};
+//   return {
+//     props: {
+//       posts,
+//     },
+//     revalidate: 20,
+//   };
+// };

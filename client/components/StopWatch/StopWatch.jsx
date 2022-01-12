@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
-import TimeForm from "./timeForm";
+import TimeForm from "./timeForm/TimeForm.jsx";
 import Countdown from "react-countdown";
+import { Wrapper, Title, CountContainer, Button } from "./style";
 
 const StopWatch = () => {
   const [time, setTime] = useState(0);
@@ -41,48 +42,24 @@ const StopWatch = () => {
   );
 
   return (
-    <div className="wrapper">
-      <div className="title">
+    <Wrapper>
+      <Title>
         <h3 className="watch">스톱워치</h3>
-      </div>
-      <div className="countDown">
+      </Title>
+      <CountContainer>
         <Countdown
           date={Date.now() + time * 1000}
           renderer={renderer}
           ref={countRef}
         />
-      </div>
-      <div className="btn-wrapper">
-        <button onClick={handleStart}>START</button>
-        <button onClick={handlePause}>PAUSE</button>
-        <button onClick={handleReset}>RESET</button>
+      </CountContainer>
+      <div>
+        <Button onClick={handleStart}>START</Button>
+        <Button onClick={handlePause}>PAUSE</Button>
+        <Button onClick={handleReset}>RESET</Button>
       </div>
       <TimeForm setHour={setHour} setMin={setMin} setSec={setSec} />
-
-      <style jsx>{`
-        .wrapper {
-          border: 1px solid lightgrey;
-        }
-
-        .title {
-          border-bottom: 1px solid lightgrey;
-          width: 75%;
-          margin: auto;
-        }
-
-        .watch {
-          font-weight: 600;
-        }
-
-        .countDown {
-          font-size: 3rem;
-        }
-
-        button {
-          margin: 1rem 1rem 0;
-        }
-      `}</style>
-    </div>
+    </Wrapper>
   );
 };
 
