@@ -4,7 +4,7 @@ import { styled as mStyled } from "@material-ui/core";
 
 export const FormWrapper = styled.div`
   width: 25vw;
-
+  height: auto;
   & > .title {
     border-bottom: 1px solid lightgrey;
     padding: 1.2rem;
@@ -15,7 +15,12 @@ export const FormWrapper = styled.div`
 export const Form = styled.div`
   padding: 2rem;
   display: flex;
-  justify-content: space-around;
+  flex-direction: column;
+
+  & > div {
+    margin: auto;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 export const DialogTitle = mStyled(DT)({
@@ -26,15 +31,16 @@ export const DialogTitle = mStyled(DT)({
 export const AddBox = styled.div`
   padding: 3rem;
   border: 2px dashed gray;
+  margin: auto;
   margin-top: 2rem;
-  width: 100%;
+  width: 80%;
   text-align: center;
   cursor: pointer;
 
   &:hover {
     color: #74beff;
     border-color: #74beff;
-    transition: all 300ms ease-in;
+    transition: all 200ms ease-in;
     & > .btn {
       border: 3px solid #74beff;
       color: #74beff;
@@ -53,62 +59,51 @@ export const AddBox = styled.div`
 
   & > .title {
     padding: 0.5rem;
-  }
-`;
-
-export const ModalTitle = styled.div`
-  border-bottom: 1px solid gray;
-  padding: 0.8rem;
-`;
-
-export const ModalForm = styled.div`
-  margin: 1.5rem;
-  display: flex;
-  flex-direction: column;
-`;
-
-export const Empty = styled.div`
-  height: 2rem;
-`;
-
-export const Info = styled.span`
-  font-size: 0.8rem;
-`;
-
-export const Count = styled.div`
-  margin-top: 0.5rem;
-`;
-
-export const BtnWrapper = styled.div`
-  text-align: right;
-
-  & > button {
-    margin: 0.5rem;
-    padding: 0.5rem 0.8rem;
     font-size: 1rem;
-    cursor: pointer;
-    outline: none;
-    border: 0.1px solid;
-    border-radius: 0.3rem;
-    background: transparent;
-    transition: all 200ms ease-out;
+  }
+`;
 
-    &:hover {
-      border-color: #3fb9ff;
-      color: #3fb9ff;
+export const Button = styled.button`
+  position: absolute;
+  top: 0.4rem;
+  right: 0.2em;
+  outline: none;
+  background-color: transparent;
+  border: none;
+  display: none;
+`;
+
+export const Card = styled.div`
+  width: 11.5vw;
+  height: 10.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1rem;
+  border: 1px solid gray;
+  margin: 0.85rem;
+  border-radius: 5px;
+  position: relative;
+
+  & > .btn {
+    position: absolute;
+    top: 0.4rem;
+    right: 0.2em;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    display: none;
+    cursor: pointer;
+    /* color: orange; */
+  }
+
+  &:hover {
+    & > .btn {
+      display: block;
     }
   }
 
-  & > .ok {
-    background: #3fa9ff;
-    color: white;
-    border: 1px solid #3fa9ff;
-    transition: all 200ms ease-out;
-
-    &:hover {
-      border-color: #3fb9ff;
-      background: #3fb9ff;
-      color: white;
-    }
+  & > .kind {
+    padding: 0.3rem;
   }
 `;
