@@ -29,11 +29,11 @@ export const DialogTitle = mStyled(DT)({
 });
 
 export const AddBox = styled.div`
-  padding: 3rem;
+  padding: ${(props) => (props.routine ? 0.8 : 3)}rem;
   border: 2px dashed gray;
   margin: auto;
   margin-top: 2rem;
-  width: 80%;
+  width: ${(props) => (props.routine ? 22 : 17)}vw;
   text-align: center;
   cursor: pointer;
 
@@ -44,7 +44,7 @@ export const AddBox = styled.div`
     & > .btn {
       border: 3px solid #74beff;
       color: #74beff;
-      transition: all 200ms ease-out;
+      transition: all 200ms ease-in;
     }
   }
 
@@ -52,14 +52,14 @@ export const AddBox = styled.div`
     border: 3px solid gray;
     outline: none;
     border-radius: 50%;
-    padding: 0.1rem 0.5rem;
-    font-size: 1.5rem;
+    padding: 0.1rem 0.6rem;
+    font-size: 1.7rem;
     background-color: transparent;
   }
 
   & > .title {
     padding: 0.5rem;
-    font-size: 1rem;
+    font-size: 1.5rem;
   }
 `;
 
@@ -94,7 +94,6 @@ export const Card = styled.div`
     border: none;
     display: none;
     cursor: pointer;
-    /* color: orange; */
   }
 
   &:hover {

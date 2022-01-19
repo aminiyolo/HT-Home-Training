@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import TimeForm from "./timeForm/TimeForm.jsx";
 import Countdown from "react-countdown";
 import { Wrapper, Title, CountContainer, Button } from "./style";
@@ -12,12 +12,22 @@ const StopWatch = () => {
   const countRef = useRef();
 
   // 시작, 중지, 재시작 버튼 클릭 이벤트
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
+    if (parseInt(hour * 60 * 60) + parseInt(min * 60) + parseInt(sec) <= 0)
+      return;
     setInprogress(true);
     countRef.current.start();
-  };
-  const handlePause = () => countRef.current.pause();
-  const handleReset = () => countRef.current.stop();
+  }, [hour, min, sec, inprogress, countRef.current]);
+
+  const handlePause = useCallback(
+    () => countRef.current.pause(),
+    [countRef.current],
+  );
+
+  const handleReset = useCallback(
+    () => countRef.current.stop(),
+    [countRef.current],
+  );
 
   // 인풋을 변경할 때 마다 새롭게 값 세팅
   useEffect(() => {

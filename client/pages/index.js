@@ -4,10 +4,13 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Routine from "../components/Routine/Routine";
 import StopWatch from "../components/StopWatch/StopWatch.jsx";
+import { useSelector } from "react-redux";
 
 export default function Home({ posts }) {
+  const { user } = useSelector((state) => state.user);
   const router = useRouter();
 
+  !user && router.push("/login");
   return (
     <div>
       <Head>
