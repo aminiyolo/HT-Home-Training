@@ -1,6 +1,6 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducers from "./userReducers";
-// import recordReducer from "./recordReducer";
+import routineReducers from "./routineReducers";
 
 import {
   persistStore,
@@ -23,7 +23,7 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
   user: userReducers,
-  // record: recordReducer,
+  routine: routineReducers,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

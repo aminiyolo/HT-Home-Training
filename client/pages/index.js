@@ -2,11 +2,12 @@ import Head from "next/head";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Routine from "../components/Routine/Routine";
+import Routine from "../components/Routine/routine.jsx";
 import StopWatch from "../components/StopWatch/StopWatch.jsx";
 import { useSelector } from "react-redux";
+import { Container } from "@material-ui/core";
 
-export default function Home({ posts }) {
+export default function Home() {
   const { user } = useSelector((state) => state.user);
   const router = useRouter();
 
@@ -43,7 +44,7 @@ export default function Home({ posts }) {
         } */
 
         .box1 {
-          background-color: green;
+          /* background-color: green; */
           flex: 1;
           text-align: center;
         }
@@ -55,7 +56,7 @@ export default function Home({ posts }) {
         }
 
         .box3 {
-          background-color: powderblue;
+          /* background-color: powderblue; */
           flex: 1;
           text-align: center;
         }

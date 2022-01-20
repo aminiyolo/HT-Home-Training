@@ -9,6 +9,7 @@ export const FormWrapper = styled.div`
     border-bottom: 1px solid lightgrey;
     padding: 1.2rem;
     font-size: 1rem;
+    user-select: none;
   }
 `;
 
@@ -36,6 +37,7 @@ export const AddBox = styled.div`
   width: ${(props) => (props.routine ? 22 : 17)}vw;
   text-align: center;
   cursor: pointer;
+  user-select: none;
 
   &:hover {
     color: #74beff;

@@ -1,26 +1,35 @@
 import Drawer from "@material-ui/core/Drawer";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Dialog, Input, Paper, Typography } from "@material-ui/core";
 import { FormWrapper, Form, AddBox, Card } from "./style";
 import Detail from "./Detail/Detail.jsx";
 import { EXERCISE, TYPE } from "../exercise";
 import { BtnWrapper } from "./Detail/style";
+import { useDispatch, useSelector } from "react-redux";
+import { addRoutine, getRoutine, removeRoutine } from "../../redux/apiCalls";
 
 const Routine = () => {
-  const [myRoutine, setMyRoutine] = useState([]);
+  const { routines } = useSelector((state) => state.routine);
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  // const [myRoutine, setMyRoutine] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [isModal, setIsModal] = useState(false);
+  const [routineCard, setRoutineCard] = useState([]);
+  const [exercise, setExercise] = useState(0);
+  const [type, setType] = useState(0);
   const [routine, setRoutine] = useState({
     kind: "유산소",
     time: "시간",
     count: 0,
   });
 
-  const [routineCard, setRoutineCard] = useState([]);
-  const [exercise, setExercise] = useState(0);
-  const [type, setType] = useState(0);
+  // useEffect(() => {
+  //   console.log(routines);
+  // }, []);
 
+  // 사이드바 열기 및 스크롤바 제거
   const handleDrawer = useCallback(() => {
     isOpen ? setIsOpen(false) : setIsOpen(true);
     isOpen
@@ -28,14 +37,7 @@ const Routine = () => {
       : (document.body.style.overflowY = "visible");
   }, [isOpen]);
 
-  const handleOkClick = useCallback(() => {
-    if (routine.count <= 0) {
-      return alert("시간 및 횟수를 입력해주세요.");
-    }
-    setIsModal(false);
-    setRoutineCard([...routineCard, routine]);
-  }, [routine, routineCard]);
-
+  // 운동 작성 폼
   const handleFormChange = useCallback(
     (e, type = "") => {
       switch (type) {
@@ -59,7 +61,17 @@ const Routine = () => {
     [routine],
   );
 
-  const handleRemove = useCallback(
+  // 운동 작성 폼 제출
+  const handleOkClick = useCallback(() => {
+    if (routine.count <= 0) {
+      return alert("시간 및 횟수를 입력해주세요.");
+    }
+    setIsModal(false);
+    setRoutineCard([...routineCard, routine]);
+  }, [routine, routineCard, setIsModal]);
+
+  // 루틴 운동 목록 삭제
+  const handleRemoveExercise = useCallback(
     (index) => {
       const NEW = [...routineCard];
       NEW.splice(index, 1);
@@ -68,11 +80,27 @@ const Routine = () => {
     [routineCard],
   );
 
+  // 작성한 루틴 저장하기
   const handleSubmit = useCallback(() => {
-    setMyRoutine((prev) => [...prev, { title }]);
+    if (!title.trim()) {
+      return alert("이름을 입력해주세요");
+    }
+
+    if (!routineCard.length) {
+      return alert("운동을 1개 이상 작성해주세요.");
+    }
+
+    addRoutine(dispatch, { id: user.googleId, title, routine: routineCard });
+    // setMyRoutine((prev) => [...prev, { title }]);
+
     setTitle("");
+    setRoutineCard([]);
     setIsOpen(false);
-  }, [title]);
+  }, [title, routineCard]);
+
+  const handleRemoveRoutine = useCallback((id) => {
+    removeRoutine(dispatch, { id });
+  }, []);
 
   return (
     <>
@@ -80,15 +108,21 @@ const Routine = () => {
         <h2>나의 루틴</h2>
       </div>
       {/* 제출된 루틴 리스트 */}
+      <div style={{ marginBottom: "0.5rem" }}>
+        <AddBox routine={true} onClick={handleDrawer}>
+          <button className="btn">+</button>
+          <div className="title">ADD ROUTINE</div>
+        </AddBox>
+      </div>
       <div
         style={{
-          height: "27.5vh",
+          height: "30vh",
           overflow: "auto",
           border: "1px solid lightgray",
         }}
       >
-        {myRoutine !== [] &&
-          myRoutine.map((routine, index) => (
+        {Array.isArray(routines) &&
+          routines.map((routine, index) => (
             <div style={{ margin: "1rem" }} key={index}>
               <Paper
                 style={{ padding: "0.5rem" }}
@@ -96,20 +130,17 @@ const Routine = () => {
                 variant={"outlined"}
               >
                 <Typography variant="h6" gutterBottom>
-                  {routine.title}
-                  <button onClick={() => handleRemove(index)} className="btn">
+                  {routine.name}
+                  <button
+                    onClick={() => handleRemoveRoutine(routine._id)}
+                    className="btn"
+                  >
                     X
                   </button>
                 </Typography>
               </Paper>
             </div>
           ))}
-      </div>
-      <div>
-        <AddBox routine={true} onClick={handleDrawer}>
-          <button className="btn">+</button>
-          <div className="title">ADD ROUTINE</div>
-        </AddBox>
       </div>
       {/* Side bar */}
       <Drawer anchor="right" open={isOpen} onClose={handleDrawer}>
@@ -138,7 +169,10 @@ const Routine = () => {
             <div>
               {routineCard.map((card, index) => (
                 <Card key={index}>
-                  <button onClick={() => handleRemove(index)} className="btn">
+                  <button
+                    onClick={() => handleRemoveExercise(index)}
+                    className="btn"
+                  >
                     X
                   </button>
                   <div className="kind">{card.kind}</div>

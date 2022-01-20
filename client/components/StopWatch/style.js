@@ -20,4 +20,13 @@ export const CountContainer = styled.div`
 
 export const Button = styled.button`
   margin: 1rem 1rem 0;
+  background-color: transparent;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 250ms ease-out;
+
+  &:hover {
+    background-color: skyblue;
+    color: white;
+  }
 `;

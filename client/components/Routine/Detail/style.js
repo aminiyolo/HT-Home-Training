@@ -32,6 +32,7 @@ export const Count = styled.div`
 
 export const BtnWrapper = styled.div`
   text-align: right;
+  user-select: none;
 
   & > button {
     margin: 0.5rem;

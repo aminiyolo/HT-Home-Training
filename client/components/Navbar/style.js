@@ -9,5 +9,7 @@ export const Nav = styled.nav`
 `;
 
 export const Item = styled.div`
-  padding: 1.5rem;
+  padding: 1rem;
+  margin: 0.5rem;
+  border-bottom: ${(props) => (props.path ? 2 : 0)}px solid skyblue;
 `;
