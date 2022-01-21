@@ -1,41 +1,47 @@
 import Drawer from "@material-ui/core/Drawer";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Dialog, Input, Paper, Typography } from "@material-ui/core";
 import { FormWrapper, Form, AddBox, Card } from "./style";
 import Detail from "./Detail/Detail.jsx";
 import { EXERCISE, TYPE } from "../exercise";
 import { BtnWrapper } from "./Detail/style";
 import { useDispatch, useSelector } from "react-redux";
-import { addRoutine, getRoutine, removeRoutine } from "../../redux/apiCalls";
+import { addRoutine, removeRoutine, updateRoutine } from "../../redux/apiCalls";
+import { ToastContainer, toast } from "react-toastify";
 
 const Routine = () => {
   const { routines } = useSelector((state) => state.routine);
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  // const [myRoutine, setMyRoutine] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [isModal, setIsModal] = useState(false);
   const [routineCard, setRoutineCard] = useState([]);
   const [exercise, setExercise] = useState(0);
   const [type, setType] = useState(0);
+  const [isModify, setIsModify] = useState(false);
+  const [dbId, setDbId] = useState(null);
   const [routine, setRoutine] = useState({
     kind: "유산소",
     time: "시간",
     count: 0,
   });
 
-  // useEffect(() => {
-  //   console.log(routines);
-  // }, []);
-
   // 사이드바 열기 및 스크롤바 제거
   const handleDrawer = useCallback(() => {
     isOpen ? setIsOpen(false) : setIsOpen(true);
-    isOpen
-      ? (document.body.style.overflowY = "hidden")
-      : (document.body.style.overflowY = "visible");
-  }, [isOpen]);
+    if (isModify) {
+      // 사이드바 닫히는 도중에 즉각적으로 UI 바뀌므로 딜레이 주어서 안보이게
+      setTimeout(() => {
+        setTitle("");
+        setRoutineCard([]);
+        setIsModify(false);
+      }, 300);
+    }
+    // isOpen
+    //   ? (document.body.style.overflowY = "hidden")
+    //   : (document.body.style.overflowY = "visible");
+  }, [isOpen, isModify, setTitle, setRoutineCard, setIsModify]);
 
   // 운동 작성 폼
   const handleFormChange = useCallback(
@@ -83,27 +89,49 @@ const Routine = () => {
   // 작성한 루틴 저장하기
   const handleSubmit = useCallback(() => {
     if (!title.trim()) {
-      return alert("이름을 입력해주세요");
+      return alert("루틴의 이름을 작성 해주세요");
     }
 
     if (!routineCard.length) {
-      return alert("운동을 1개 이상 작성해주세요.");
+      return alert("운동을 1개 이상 작성 해주세요.");
     }
 
     addRoutine(dispatch, { id: user.googleId, title, routine: routineCard });
-    // setMyRoutine((prev) => [...prev, { title }]);
 
     setTitle("");
     setRoutineCard([]);
     setIsOpen(false);
   }, [title, routineCard]);
 
-  const handleRemoveRoutine = useCallback((id) => {
+  // 기존 작성된 루틴 삭제하기
+  const handleRemoveRoutine = useCallback((e, id) => {
+    e.stopPropagation();
     removeRoutine(dispatch, { id });
   }, []);
 
+  // 기존 작성된 루틴 확인하기
+  const handleViewRoutine = useCallback(
+    (routine) => {
+      setIsOpen(true);
+      setIsModify(true);
+      setDbId(routine._id);
+      setTitle(routine.name);
+      setRoutineCard([...routine.routines]);
+    },
+    [routine, setIsOpen, setTitle, setRoutineCard],
+  );
+
+  // 기존 작성된 루틴 수정하기
+  const handleUpdateRoutine = useCallback(() => {
+    updateRoutine(dispatch, { id: dbId, title, routine: routineCard });
+    setIsOpen(false);
+    toast("수정 완료!", {
+      autoClose: 2000,
+    });
+  }, [title, routineCard, dbId, setIsOpen]);
+
   return (
-    <>
+    <div style={{ border: "1px solid lightgray" }}>
       <div>
         <h2>나의 루틴</h2>
       </div>
@@ -121,9 +149,13 @@ const Routine = () => {
           border: "1px solid lightgray",
         }}
       >
-        {Array.isArray(routines) &&
+        {routines.length ? (
           routines.map((routine, index) => (
-            <div style={{ margin: "1rem" }} key={index}>
+            <div
+              style={{ margin: "1rem", cursor: "pointer" }}
+              onClick={() => handleViewRoutine(routine)}
+              key={index}
+            >
               <Paper
                 style={{ padding: "0.5rem" }}
                 elevation={3}
@@ -132,7 +164,7 @@ const Routine = () => {
                 <Typography variant="h6" gutterBottom>
                   {routine.name}
                   <button
-                    onClick={() => handleRemoveRoutine(routine._id)}
+                    onClick={(e) => handleRemoveRoutine(e, routine._id)}
                     className="btn"
                   >
                     X
@@ -140,17 +172,23 @@ const Routine = () => {
                 </Typography>
               </Paper>
             </div>
-          ))}
+          ))
+        ) : (
+          <h1 style={{ fontSize: "3rem", marginTop: "5rem" }}>텅~</h1>
+        )}
       </div>
       {/* Side bar */}
       <Drawer anchor="right" open={isOpen} onClose={handleDrawer}>
         <FormWrapper>
-          <div className="title">나만의 루틴 만들기</div>
+          <div className="title">
+            {!isModify ? "나만의 루틴 만들기" : "나만의 루틴 수정하기"}
+          </div>
           <Form>
             <div>
               <Input
                 placeholder="루틴의 이름을 작성하세요"
                 onChange={(e) => setTitle(e.target.value)}
+                value={title}
               />
             </div>
             <AddBox onClick={() => setIsModal(true)}>
@@ -179,21 +217,30 @@ const Routine = () => {
                   <div>
                     {card.time}
                     {" :  "}
-                    {card.count}
+                    {card.time === "시간"
+                      ? `${card.count}분`
+                      : `${card.count}개`}
                   </div>
                 </Card>
               ))}
             </div>
             <BtnWrapper>
-              <button onClick={handleDrawer}>Cancel</button>
-              <button onClick={handleSubmit} className="ok">
-                Ok
-              </button>
+              <button onClick={handleDrawer}>Cancle</button>
+              {!isModify ? (
+                <button onClick={handleSubmit} className="ok">
+                  Ok
+                </button>
+              ) : (
+                <button onClick={handleUpdateRoutine} className="ok">
+                  수정하기
+                </button>
+              )}
             </BtnWrapper>
           </Form>
         </FormWrapper>
       </Drawer>
-    </>
+      <ToastContainer />
+    </div>
   );
 };
 

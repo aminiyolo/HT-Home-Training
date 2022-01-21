@@ -26,7 +26,7 @@ const routineReducer = createSlice({
       state.error = true;
     },
 
-    routineUpdate: (state, action) => {
+    routineAdd: (state, action) => {
       state.routines = [...state.routines, action.payload];
     },
 
@@ -35,6 +35,14 @@ const routineReducer = createSlice({
         (routine) => routine._id !== action.payload.id,
       );
     },
+
+    routineUpadte: (state, action) => {
+      const { _id } = action.payload;
+      const newRoutines = [...state.routines];
+      const index = newRoutines.findIndex((routine) => routine._id === _id);
+      newRoutines.splice(index, 1, action.payload);
+      state.routines = newRoutines;
+    },
   },
 });
 
@@ -42,7 +50,8 @@ export const {
   loadStart,
   loadSuccess,
   loadFailure,
-  routineUpdate,
+  routineAdd,
   routineRemove,
+  routineUpadte,
 } = routineReducer.actions;
 export default routineReducer.reducer;

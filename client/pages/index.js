@@ -6,9 +6,12 @@ import Routine from "../components/Routine/routine.jsx";
 import StopWatch from "../components/StopWatch/StopWatch.jsx";
 import { useSelector } from "react-redux";
 import { Container } from "@material-ui/core";
+import { getRoutine } from "../redux/apiCalls.js";
+import Youtube from "../components/Youtube/youtube.jsx";
 
-export default function Home() {
+export default function Home({ routines }) {
   const { user } = useSelector((state) => state.user);
+
   const router = useRouter();
 
   !user && router.push("/login");
@@ -26,11 +29,7 @@ export default function Home() {
           <Routine />
         </div>
         <div className="box3">
-          {/* <div style={{ width: "20vw" }}>
-            {posts?.map((p) => (
-              <div key={p.id}>{p.body}</div>
-            ))}
-          </div> */}
+          <Youtube />
         </div>
       </div>
       <style jsx>{`
@@ -66,14 +65,15 @@ export default function Home() {
 }
 
 // export const getServerSideProps = async () => {
-//   const res = await fetch(
-//     "https://jsonplaceholder.typicode.com/posts?_start=0&_end=10",
-//   );
-//   const posts = await res.json();
+//   getRoutine(dispatch, )
+// const res = await fetch(
+//   "https://jsonplaceholder.typicode.com/😎posts?_start=0&_end=10",
+// );
+// const posts = await res.json();
 
 //   return {
 //     props: {
-//       posts,
+//       routines,
 //     },
 //   };
 // };

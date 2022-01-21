@@ -3,8 +3,9 @@ import {
   loadStart,
   loadSuccess,
   loadFailure,
-  routineUpdate,
+  routineAdd,
   routineRemove,
+  routineUpadte,
 } from "./routineReducers";
 import { axiosInstance } from "../utill/axios";
 
@@ -25,7 +26,6 @@ export const getRoutine = async (dispatch, id) => {
   dispatch(loadStart());
   try {
     const res = await axiosInstance.get("/routines/get", { params: { id } });
-    console.log(res.data);
     dispatch(loadSuccess(res.data));
   } catch (err) {
     dispatch(loadFailure());
@@ -35,8 +35,7 @@ export const getRoutine = async (dispatch, id) => {
 export const addRoutine = async (dispatch, data) => {
   try {
     const res = await axiosInstance.post("/routines/add", data);
-    console.log(res.data);
-    dispatch(routineUpdate(res.data));
+    dispatch(routineAdd(res.data));
   } catch (err) {
     console.log(err);
   }
@@ -46,6 +45,15 @@ export const removeRoutine = async (dispatch, id) => {
   try {
     await axiosInstance.post("/routines/remove", id);
     dispatch(routineRemove(id));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const updateRoutine = async (dispatch, data) => {
+  try {
+    const res = await axiosInstance.post("/routines/update", data);
+    dispatch(routineUpadte(res.data));
   } catch (err) {
     console.log(err);
   }

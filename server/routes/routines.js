@@ -30,10 +30,28 @@ router.post("/add", async (req, res) => {
 
 router.post("/remove", async (req, res) => {
   const { id } = req.body;
-  console.log(id);
   try {
     await Routine.findByIdAndDelete({ _id: id });
     return res.status(200).json();
+  } catch (err) {
+    return res.status(500).json(err);
+  }
+});
+
+router.post("/update", async (req, res) => {
+  const { id, title, routine } = req.body;
+  try {
+    const data = await Routine.findOneAndUpdate(
+      { _id: id },
+      {
+        $set: {
+          name: title,
+          routines: routine,
+        },
+      },
+      { new: true },
+    );
+    return res.status(200).json(data);
   } catch (err) {
     return res.status(500).json(err);
   }
