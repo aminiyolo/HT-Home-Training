@@ -4,7 +4,7 @@ export const Footer = styled.footer`
   position: absolute;
   width: 100%;
   height: 7.5vh;
-  bottom: 0;
+  /* bottom: 0; */
   color: white;
   background-color: black;
   display: flex;

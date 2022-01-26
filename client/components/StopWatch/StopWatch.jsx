@@ -13,8 +13,9 @@ const StopWatch = () => {
 
   // 시작, 중지, 재시작 버튼 클릭 이벤트
   const handleStart = useCallback(() => {
-    if (parseInt(hour * 60 * 60) + parseInt(min * 60) + parseInt(sec) <= 0)
-      return;
+    if (parseInt(hour * 60 * 60) + parseInt(min * 60) + parseInt(sec) <= 0) {
+      return; // 시간이 0초 이하일 때, 시작 방지
+    }
     setInprogress(true);
     countRef.current.start();
   }, [hour, min, sec, inprogress, countRef.current]);

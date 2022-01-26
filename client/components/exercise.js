@@ -6,4 +6,5 @@ export const EXERCISE = [
   "윗몸 일으키기",
   "스트레칭",
 ];
+
 export const TYPE = ["시간", "횟수"];

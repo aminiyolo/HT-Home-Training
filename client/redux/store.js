@@ -1,7 +1,8 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userReducers from "./userReducers";
 import routineReducers from "./routineReducers";
-
+import recordReducers from "./recordReducers";
+import storage from "redux-persist/lib/storage";
 import {
   persistStore,
   persistReducer,
@@ -13,8 +14,6 @@ import {
   REGISTER,
 } from "redux-persist";
 
-import storage from "redux-persist/lib/storage";
-
 const persistConfig = {
   key: "root",
   version: 1,
@@ -24,6 +23,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userReducers,
   routine: routineReducers,
+  record: recordReducers,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

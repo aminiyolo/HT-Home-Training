@@ -8,13 +8,13 @@ import { useSelector } from "react-redux";
 import { Container } from "@material-ui/core";
 import { getRoutine } from "../redux/apiCalls.js";
 import Youtube from "../components/Youtube/youtube.jsx";
+import Calendar from "../components/Calendar/index.js";
 
 export default function Home({ routines }) {
   const { user } = useSelector((state) => state.user);
-
   const router = useRouter();
-
   !user && router.push("/login");
+
   return (
     <div>
       <Head>
@@ -23,7 +23,10 @@ export default function Home({ routines }) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="box-container">
-        <div className="box1">1</div>
+        <div className="box1">
+          <Calendar />
+          <div>Record</div>
+        </div>
         <div className="box2">
           <StopWatch />
           <Routine />
@@ -37,15 +40,8 @@ export default function Home({ routines }) {
           display: flex;
         }
 
-        /* .box {
-          flex: 1;
-          text-align: center;
-        } */
-
         .box1 {
-          /* background-color: green; */
           flex: 1;
-          text-align: center;
         }
 
         .box2 {
@@ -55,7 +51,6 @@ export default function Home({ routines }) {
         }
 
         .box3 {
-          /* background-color: powderblue; */
           flex: 1;
           text-align: center;
         }

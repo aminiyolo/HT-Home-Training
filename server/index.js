@@ -18,6 +18,7 @@ mongoose
   .catch((err) => console.log(err));
 
 app.use("/api/routines", require("./routes/routines"));
+app.use("/api/records", require("./routes/records"));
 
 const port = process.env.PORT || 8080;
 app.listen(port, () => {

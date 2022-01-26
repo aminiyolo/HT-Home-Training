@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Search from "./Search/index";
 
 const Youtube = () => {
-  const [url, setUrl] = useState("");
+  const [url, setUrl] = useState("yRkO1qS3ym8");
+
+  const handleSearch = useCallback(
+    (value) => {
+      setUrl(value);
+    },
+    [url],
+  );
 
   return (
     <div>
       <div>
-        <Search setUrl={setUrl} />
+        <Search handleSearch={handleSearch} />
       </div>
       <div style={{ marginTop: "5rem" }}>
         <iframe

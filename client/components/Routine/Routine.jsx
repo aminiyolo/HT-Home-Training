@@ -6,12 +6,18 @@ import Detail from "./Detail/Detail.jsx";
 import { EXERCISE, TYPE } from "../exercise";
 import { BtnWrapper } from "./Detail/style";
 import { useDispatch, useSelector } from "react-redux";
-import { addRoutine, removeRoutine, updateRoutine } from "../../redux/apiCalls";
+import {
+  addRecord,
+  addRoutine,
+  removeRoutine,
+  updateRoutine,
+} from "../../redux/apiCalls";
 import { ToastContainer, toast } from "react-toastify";
 
 const Routine = () => {
   const { routines } = useSelector((state) => state.routine);
   const { user } = useSelector((state) => state.user);
+  const { date } = useSelector((state) => state.record);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -25,6 +31,7 @@ const Routine = () => {
     kind: "유산소",
     time: "시간",
     count: 0,
+    done: false,
   });
 
   // 사이드바 열기 및 스크롤바 제거
@@ -106,7 +113,8 @@ const Routine = () => {
   // 기존 작성된 루틴 삭제하기
   const handleRemoveRoutine = useCallback((e, id) => {
     e.stopPropagation();
-    removeRoutine(dispatch, { id });
+    const res = window.confirm("정말로 삭제하시겠습니까?");
+    res && removeRoutine(dispatch, { id });
   }, []);
 
   // 기존 작성된 루틴 확인하기
@@ -130,6 +138,16 @@ const Routine = () => {
     });
   }, [title, routineCard, dbId, setIsOpen]);
 
+  // 운동 기록 추가하기
+  const handleAddRecord = useCallback(
+    (e, routine) => {
+      e.stopPropagation();
+      // console.log(routine);
+      addRecord(dispatch, { id: user.googleId, routine });
+    },
+    [routine],
+  );
+
   return (
     <div style={{ border: "1px solid lightgray" }}>
       <div>
@@ -152,25 +170,40 @@ const Routine = () => {
         {routines.length ? (
           routines.map((routine, index) => (
             <div
-              style={{ margin: "1rem", cursor: "pointer" }}
+              style={{
+                margin: "1rem",
+                cursor: "pointer",
+                display: "flex",
+              }}
               onClick={() => handleViewRoutine(routine)}
               key={index}
             >
-              <Paper
-                style={{ padding: "0.5rem" }}
-                elevation={3}
-                variant={"outlined"}
+              <button
+                onClick={(e) => handleAddRecord(e, routine)}
+                style={{ cursor: "pointer" }}
               >
-                <Typography variant="h6" gutterBottom>
-                  {routine.name}
-                  <button
-                    onClick={(e) => handleRemoveRoutine(e, routine._id)}
-                    className="btn"
-                  >
-                    X
-                  </button>
-                </Typography>
-              </Paper>
+                기록
+              </button>
+              <div>
+                <Paper
+                  style={{
+                    padding: "0.5rem",
+                    width: "30vw",
+                  }}
+                  elevation={3}
+                  variant={"outlined"}
+                >
+                  <Typography variant="h6" gutterBottom>
+                    {routine.name}
+                    <button
+                      onClick={(e) => handleRemoveRoutine(e, routine._id)}
+                      className="btn"
+                    >
+                      X
+                    </button>
+                  </Typography>
+                </Paper>
+              </div>
             </div>
           ))
         ) : (
